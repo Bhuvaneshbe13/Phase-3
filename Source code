@@ -1,0 +1,39 @@
+from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.preprocessing import LabelEncoder
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np # Import numpy for creating sample data
+
+# Assuming y_test and y_pred contain the true and predicted class labels
+
+# --- Start: Placeholder code to define y_test and y_pred ---
+# ** Replace this section with your actual code to get y_test and y_pred **
+# Example: Create some sample data for demonstration purposes
+y_test = ['cat', 'dog', 'cat', 'bird', 'dog', 'cat']
+y_pred = ['cat', 'dog', 'dog', 'bird', 'cat', 'cat']
+# --- End: Placeholder code ---
+
+
+# Initialize and fit the LabelEncoder
+le = LabelEncoder()
+# Fit on all unique labels from both y_test and y_pred to ensure all possible classes are encoded
+le.fit(list(set(y_test).union(set(y_pred))))
+
+# Get all possible label values (encoded)
+# We don't need the encoded 'labels' variable for confusion_matrix when using string labels
+# labels = le.transform(le.classes_)
+
+# Evaluation report (with full label set)
+# This works correctly as it uses the original y_test, y_pred and string target_names
+print("Classification Report:\n", classification_report(y_test, y_pred, labels=le.transform(le.classes_), target_names=le.classes_))
+
+# Confusion matrix
+# Pass the original string classes (le.classes_) to the labels parameter
+cm = confusion_matrix(y_test, y_pred, labels=le.classes_)
+plt.figure(figsize=(8, 6))
+# Use the original classes for tick labels
+sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=le.classes_, yticklabels=le.classes_)
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
